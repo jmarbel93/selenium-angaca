@@ -1,0 +1,2 @@
+class GooglePage:
+    pass
