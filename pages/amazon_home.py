@@ -7,4 +7,3 @@ class AmazonHome(BasePage):
 
     def click_music(self):
         self.click(self.MUSIC_LINK)
-    
