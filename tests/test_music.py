@@ -3,9 +3,6 @@ from pages.amazon_home import AmazonHome
 from pages.amazon_music import AmazonMusic
 from selenium.webdriver.common.by import By
 
-
-
-
 def test_music(driver):
     
     
@@ -19,4 +16,4 @@ def test_music(driver):
     amazon_home.click_music()
 
     
-    assert amazon_music.get_navbar_logo_elements()
+    assert amazon_music.is_visible()

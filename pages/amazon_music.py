@@ -5,5 +5,5 @@ class AmazonMusic(BasePage):
     
     NAVBAR_LOGO = (By.ID, 'navbarMusicLogo')  
     
-    def get_navbar_logo_elements(self):
+    def is_visible(self):
         return self.driver.find_elements(*self.NAVBAR_LOGO)
