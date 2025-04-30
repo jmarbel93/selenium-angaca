@@ -1,7 +1,9 @@
 import time
 from pages.amazon_home import AmazonHome
 from pages.amazon_music import AmazonMusic
-from selenium.webdriver.common.by import By
+from config import get_base_url
+import time
+
 
 def test_music(driver):
     
@@ -10,7 +12,7 @@ def test_music(driver):
     amazon_music = AmazonMusic(driver)    
     
 
-    driver.get("https://www.amazon.es")
+    driver.get(get_base_url())
     
     
     amazon_home.click_music()

@@ -1,32 +1,50 @@
 import pytest
-from selenium import webdriver 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from config import get_browser, is_headless, is_fullscreen
 
 @pytest.fixture(scope="function")
 def driver(request):
-    """"I have copied this fixture from a tutorial
-    It will allow me to initialize the Webdriver based on CLI argument
-    """
-    
-    browser = request.config.getoption("--browser")
+    cli_browser = request.config.getoption("--browser")
+    browser = (cli_browser or get_browser()).strip().lower()
+    headless = is_headless()  
 
     if browser == "chrome":
-        driver = webdriver.Chrome()
+        options = ChromeOptions()
+        if headless:
+            options.add_argument("--headless=new")  
+        driver = webdriver.Chrome(options=options)
+
     elif browser == "firefox":
-        driver = webdriver.Firefox()
+        options = FirefoxOptions()
+        if headless:
+            options.add_argument("--headless")
+        driver = webdriver.Firefox(options=options)
+
     elif browser == "edge":
-        driver = webdriver.Edge()
+        options = EdgeOptions()
+        if headless:
+            options.add_argument("--headless=new")
+        driver = webdriver.Edge(options=options)
+
     else:
         raise ValueError(f"Unsupported browser: {browser}")
 
-    driver.maximize_window()
-    # This will provide the driver instance to the test
-    yield driver  
-    # and the close the driver after test text execution
-    driver.quit()  
-
-# This adds a command line option for selecting the browser
-# by default it will be chrome
-def pytest_addoption(parser):
+    if is_fullscreen():
+        driver.fullscreen_window()
+    else:
+        driver.maximize_window()
+        
+    yield driver
     
-    parser.addoption("--browser", action="store", default="chrome",
-                     help="Choose browser: chrome, firefox, edge")
+    driver.quit()
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--browser", 
+        action="store", 
+        default=None,  
+        help="Browser to use for tests: chrome, firefox, edge"
+    )
