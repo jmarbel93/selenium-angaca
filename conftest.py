@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
-from config import get_browser, is_headless
+from config import get_browser, is_headless, is_fullscreen
 
 @pytest.fixture(scope="function")
 def driver(request):
@@ -26,14 +26,19 @@ def driver(request):
     elif browser == "edge":
         options = EdgeOptions()
         if headless:
-            options.add_argument("--headless=new")  # "--headless" for older versions
+            options.add_argument("--headless=new")  
         driver = webdriver.Edge(options=options)
 
     else:
         raise ValueError(f"Unsupported browser: {browser}")
 
-    driver.maximize_window()
+    if is_fullscreen():
+        driver.fullscreen_window()   
+    else:
+        driver.maximize_window()
+             
     yield driver
+    
     driver.quit()
 
 def pytest_addoption(parser):

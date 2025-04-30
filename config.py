@@ -17,3 +17,6 @@ def get_env():
 
 def is_headless():
     return config["default"].get("headless", "false").lower() == "true"
+
+def is_fullscreen():
+    return config["default"].get("fullscreen", "false").strip().lower() == "true"
