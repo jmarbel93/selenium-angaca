@@ -35,3 +35,9 @@ Repo for selenium learning for Agaca
    Then we install **Selenium** and **Pytest** from our `requirements.txt`:  
    ```bash  
    pip install -r requirements.txt
+
+
+## How to run the tests
+
+-Run the command "pytest"
+-Additionally, if you wish to choose the browser (chrome by default) run it like this: "pytest --browser=firefox"
