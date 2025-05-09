@@ -1,9 +1,16 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from config import get_timeout
+from selenium.webdriver.common.by import By
 
 
 class BasePage:
+    
+    
+    SEARCH_TEXT_INPUT = (By.ID, 'twotabsearchtextbox')      
+    
+    SEARCH_INPUT_SUBMIT = (By.ID, 'nav-search-submit-button') 
+    
 
     
     def __init__(self, driver):
@@ -36,3 +43,12 @@ class BasePage:
         element = self.wait_for_element(locator)
         element.clear()
         element.send_keys(text)
+        
+        
+    def enter_text_search_bar(self, text):
+        self.enter_text(self.SEARCH_TEXT_INPUT, text)
+        
+        
+    def click_search_submit(self):
+        self.click(self.SEARCH_INPUT_SUBMIT)
+        
