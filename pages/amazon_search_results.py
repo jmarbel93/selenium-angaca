@@ -4,26 +4,47 @@ from pages.base_page import BasePage
 class AmazonSearchResults(BasePage):
     
     NAVBAR_LOGO = (By.ID, 'navbarMusicLogo')  
-    PUMA_CHECKBOX = (By.XPATH, "//li[.//span[contains(text(), 'PUMA')]]//i[contains(@class, 'a-icon-checkbox')]")
+    BRAND_CHECKBOX = (By.XPATH, "//*[@id='brandsRefinements']//div[following-sibling::span[text()='{}'] ]//i")
     ORDERBY_DROPDOWN = (By.ID, "a-autoid-0-announce")
-    ORDERBY_DROPDOWN_ASCENDING_PRICE_OPTION = (By.ID, "s-result-sort-select_1")
+    ORDERBY_DROPDOWN_OPTION = (By.ID, "s-result-sort-select_{}")
     RESULT_LIST = (By.CLASS_NAME, "s-result-list")
-    PRICES = (By.XPATH, "(//div[@data-component-type='s-search-result']//span[@class='a-price']//span[@class='a-offscreen'])[position() <= 10]")
+    PRICES = (By.XPATH, "(//div[@data-cy='price-recipe']//span[@class='a-price']//span[@class='a-offscreen'])")
 
     
         
     def is_visible(self):
         return self.driver.find_elements(*self.NAVBAR_LOGO)
     
-    def click_PUMA_checkbox(self):
-        self.click(self.PUMA_CHECKBOX)
+    def click_brand_checkbox(self, brand):
+        locator = (
+            self.BRAND_CHECKBOX[0],                  
+            self.BRAND_CHECKBOX[1].format(brand)    
+        )
+        self.click(locator)
         
-    def click_orderby_dropdown(self):
+    
+        
+        
+    def order_results_by(self,option):
+        
+        """
+            Chooses orderby dropdown option:
+            0 - Destacados
+            1 - Precio: De menor a mayor
+            2 - Precio: De mayor a menor
+            3 - Promedio Opiniones de clientes
+            4 - Lanzamientos recientes
+            5 - Los mas vendidos
+            
+        """
+        
         self.click(self.ORDERBY_DROPDOWN)
         
-    def click_orderby_dropdown_ascending_price_option(self):
-        self.click(self.ORDERBY_DROPDOWN_ASCENDING_PRICE_OPTION)
+        locator = (
+            self.ORDERBY_DROPDOWN_OPTION[0],                  
+            self.ORDERBY_DROPDOWN_OPTION[1].format(option)    
+        )
+        self.click(locator)
         
-    def get_first_ten_prices(self):
-            prices = self.driver.find_elements(*self.PRICES)
-            return prices
+    def get_prices(self, limit=None):
+        return self.driver.find_elements(*self.PRICES)[:limit]
